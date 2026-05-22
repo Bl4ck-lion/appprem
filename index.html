@@ -206,4 +206,207 @@
             padding: 20px;
             text-align: center;
             margin-top: 40px;
-            box-shadow: 4px 4px 0px var(--border
+            box-shadow: 4px 4px 0px var(--border-dark);
+        }
+        .not-found-banner p { margin: 0 0 15px 0; font-weight: 600; font-size: 16px; }
+        
+        .empty-state { text-align: center; width: 100%; padding: 40px 0; }
+        .hidden { display: none !important; }
+
+        /* Note Harga Berubah */
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.8;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .app-container { border-radius: 0; border: none; border-top: 3px solid var(--border-dark); border-bottom: 3px solid var(--border-dark);}
+            body { padding: 0; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div class="app-container">
+        <header>
+            <div class="logo">🎮 Seraphm Store</div>
+            <button id="theme-toggle" class="theme-btn">🌙 Gelap</button>
+        </header>
+
+        <main>
+            <div class="promo-banner">
+                💡 <span><b>Psstt... Harga bisa lebih murah lho!</b> Harga juga bisa berubah-ubah, nggak selalu kaku kayak di pricelist. Hubungi admin sekarang buat dapet best deal! 😉</span>
+            </div>
+
+            <div class="controls">
+                <input type="text" id="search-bar" class="search-bar" placeholder="🔍 Cari aplikasi (ex: Netflix, Canva, Zoom...)" onkeyup="filterProducts()">
+                <div class="categories">
+                    <button class="cat-btn active" onclick="setCategory('All', this)">Semua Aplikasi</button>
+                    <button class="cat-btn" onclick="setCategory('Streaming', this)">📺 Streaming</button>
+                    <button class="cat-btn" onclick="setCategory('Editing', this)">🎨 Editing</button>
+                    <button class="cat-btn" onclick="setCategory('Edu', this)">📚 Edu & Reading</button>
+                    <button class="cat-btn" onclick="setCategory('Meeting', this)">🎧 Audio & Meeting</button>
+                </div>
+            </div>
+
+            <div class="grid-cards" id="product-grid"></div>
+            
+            <div id="empty-state" class="empty-state hidden">
+                <p style="font-size: 18px; font-weight: 700; margin-bottom: 15px;">Yah, aplikasinya nggak ketemu 🥲</p>
+                <button class="btn-pesan" style="padding: 12px 24px;" onclick="chatAdminManual()">Tanya Admin Langsung 💬</button>
+            </div>
+
+            <div class="not-found-banner" id="bottom-banner">
+                <p>Aplikasi yang kamu butuhkan belum ada di pricelist?</p>
+                <button class="btn-pesan" onclick="chatAdminManual()">Chat Admin Saja! 💬</button>
+            </div>
+
+            <div class="footer-note">
+                ⚠️ Note: Harga sewaktu-waktu dapat berubah seiring berjalannya waktu yaa~
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Toggle Theme
+        const toggleBtn = document.getElementById('theme-toggle');
+        toggleBtn.addEventListener('click', () => {
+            if(document.body.getAttribute('data-theme') === 'dark') {
+                document.body.setAttribute('data-theme', 'light');
+                toggleBtn.innerText = '🌙 Gelap';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                toggleBtn.innerText = '☀️ Terang';
+            }
+        });
+
+        // Database Produk Seraphm (Harga Asli + Rp 5.000)
+        const products = [
+            // STREAMING
+            { category: "Streaming", name: "Netflix (Sharing 1plu)", icon: "🍿", options: [ { label: "1 Hari - Rp 8.000", val: "1 Hari", price: "Rp 8.000" }, { label: "3 Hari - Rp 12.000", val: "3 Hari", price: "Rp 12.000" }, { label: "7 Hari - Rp 16.000", val: "7 Hari", price: "Rp 16.000" }, { label: "1 Bulan - Rp 35.000", val: "1 Bulan", price: "Rp 35.000" } ]},
+            { category: "Streaming", name: "Netflix (Sharing 1p2u)", icon: "🍿", options: [ { label: "1 Hari - Rp 7.000", val: "1 Hari", price: "Rp 7.000" }, { label: "7 Hari - Rp 14.000", val: "7 Hari", price: "Rp 14.000" }, { label: "1 Bulan - Rp 23.000", val: "1 Bulan", price: "Rp 23.000" } ]},
+            { category: "Streaming", name: "Netflix (Semi & Private)", icon: "🎬", options: [ { label: "Semi 1 Bln - Rp 42.000", val: "Semiprivate 1 Bulan", price: "Rp 42.000" }, { label: "Priv 7 Hari - Rp 55.000", val: "Private 7 Hari", price: "Rp 55.000" }, { label: "Priv 1 Bln - Rp 160.000", val: "Private 1 Bulan", price: "Rp 160.000" } ]},
+            { category: "Streaming", name: "Disney+ (Sharing)", icon: "✨", options: [ { label: "10u 1 Bulan - Rp 25.000", val: "Sharing 10u 1 Bulan", price: "Rp 25.000" }, { label: "6u 1 Bulan - Rp 28.000", val: "Sharing 6u 1 Bulan", price: "Rp 28.000" } ]},
+            { category: "Streaming", name: "Disney+ (Private)", icon: "👑", options: [ { label: "1 Bulan - Rp 160.000", val: "1 Bulan", price: "Rp 160.000" } ]},
+            { category: "Streaming", name: "YouTube Premium", icon: "▶️", options: [ { label: "Famplan 1 Bln - Rp 8.500", val: "Famplan 1 Bulan", price: "Rp 8.500" }, { label: "Indplan 1 Bln - Rp 18.000", val: "Indplan 1 Bulan", price: "Rp 18.000" }, { label: "Famhead 1 Bln - Rp 20.000", val: "Famhead 1 Bulan", price: "Rp 20.000" } ]},
+            { category: "Streaming", name: "Vidio Platinum", icon: "⚽", options: [ { label: "Sharing AllDev 1 Bln - Rp 31.000", val: "Sharing 1 Bulan", price: "Rp 31.000" }, { label: "Private AllDev 1 Bln - Rp 47.000", val: "Private 1 Bulan", price: "Rp 47.000" }, { label: "Private TV 1 Bln - Rp 12.000", val: "Private TV 1 Bulan", price: "Rp 12.000" } ]},
+            { category: "Streaming", name: "Prime Video", icon: "📦", options: [ { label: "Sharing 2u 1 Bln - Rp 15.000", val: "Sharing 2u 1 Bulan", price: "Rp 15.000" }, { label: "Private 1 Bln - Rp 18.000", val: "Private 1 Bulan", price: "Rp 18.000" } ]},
+            { category: "Streaming", name: "Bstation", icon: "📺", options: [ { label: "Sharing 1 Bln - Rp 12.000", val: "Sharing 1 Bulan", price: "Rp 12.000" }, { label: "Private 1 Bln - Rp 42.000", val: "Private 1 Bulan", price: "Rp 42.000" } ]},
+            { category: "Streaming", name: "WeTV", icon: "💙", options: [ { label: "Sharing 6u 1 Bln - Rp 13.000", val: "Sharing 6u 1 Bulan", price: "Rp 13.000" }, { label: "Private 1 Bln - Rp 31.500", val: "Private 1 Bulan", price: "Rp 31.500" } ]},
+            { category: "Streaming", name: "IQIYI", icon: "💚", options: [ { label: "Sharing Standar 1B - Rp 10.000", val: "Sharing Standard 1 Bulan", price: "Rp 10.000" }, { label: "Private Premium 1B - Rp 42.000", val: "Private Premium 1 Bulan", price: "Rp 42.000" } ]},
+            { category: "Streaming", name: "HBO Max", icon: "🎬", options: [ { label: "Shar Std 5u 1 Bln - Rp 21.000", val: "Sharing Std 1 Bulan", price: "Rp 21.000" }, { label: "Private Ult 1 Bln - Rp 117.000", val: "Private Ult 1 Bulan", price: "Rp 117.000" } ]},
+            { category: "Streaming", name: "Loklok", icon: "📱", options: [ { label: "Shar Basic 1Bln - Rp 22.000", val: "Sharing Basic 1 Bulan", price: "Rp 22.000" }, { label: "Private Std 1Bln - Rp 87.000", val: "Private Standard 1 Bulan", price: "Rp 87.000" } ]},
+            { category: "Streaming", name: "Lainnya (Viu/Viki/Dll)", icon: "🍿", options: [ { label: "Viu Private 1 Bln - Rp 7.000", val: "Viu Private 1 Bulan", price: "Rp 7.000" }, { label: "AppleTV Private 1B - Rp 51.000", val: "Apple TV Private 1 Bulan", price: "Rp 51.000" }, { label: "Crunchyroll Priv 1B - Rp 21.000", val: "Crunchyroll Private 1 Bulan", price: "Rp 21.000" } ]},
+            
+            // EDITING
+            { category: "Editing", name: "Canva Pro", icon: "🖌️", options: [ { label: "Member 1 Bulan - Rp 7.000", val: "Member 1 Bulan", price: "Rp 7.000" }, { label: "Member Lifetime - Rp 13.000", val: "Lifetime (Garansi 6B)", price: "Rp 13.000" }, { label: "Admin - Rp 11.000", val: "Admin (Inv 25)", price: "Rp 11.000" } ]},
+            { category: "Editing", name: "CapCut Pro", icon: "✂️", options: [ { label: "Sharing 1 Bulan - Rp 12.000", val: "Sharing 1 Bulan", price: "Rp 12.000" }, { label: "Private 1 Bulan - Rp 20.000", val: "Private 1 Bulan (Fullgar)", price: "Rp 20.000" }, { label: "Sharing 12B - Rp 58.000", val: "Sharing 12 Bulan", price: "Rp 58.000" } ]},
+            { category: "Editing", name: "Remini (Web)", icon: "📸", options: [ { label: "Sharing 1 Bulan - Rp 14.000", val: "Sharing 1 Bulan", price: "Rp 14.000" }, { label: "Private 1 Bulan - Rp 20.000", val: "Private 1 Bulan", price: "Rp 20.000" } ]},
+            { category: "Editing", name: "Alight Motion", icon: "🎥", options: [ { label: "Sharing 1 Thn - Rp 13.000", val: "Sharing 1 Tahun", price: "Rp 13.000" }, { label: "Private 1 Thn - Rp 16.000", val: "Private 1 Tahun", price: "Rp 16.000" } ]},
+            { category: "Editing", name: "VSCO & Meitu", icon: "📷", options: [ { label: "VSCO Pro iOS 1 Thn - Rp 21.000", val: "VSCO Pro iOS 1 Tahun", price: "Rp 21.000" }, { label: "Meitu VIP Andro 1 Bln - Rp 25.000", val: "Meitu VIP Andro 1 Bulan", price: "Rp 25.000" } ]},
+            { category: "Editing", name: "Dazzcam & Picsart", icon: "🖼️", options: [ { label: "Dazzcam Lifetime - Rp 18.000", val: "Dazzcam Lifetime", price: "Rp 18.000" }, { label: "Picsart Private 1 Bln - Rp 12.000", val: "Picsart Private 1 Bulan", price: "Rp 12.000" } ]},
+
+            // EDU & READING
+            { category: "Edu", name: "ChatGPT Plus", icon: "🤖", options: [ { label: "Sharing 8u 1 Bln - Rp 21.000", val: "Sharing 8u 1 Bulan", price: "Rp 21.000" }, { label: "Sharing 3u 1 Bln - Rp 44.000", val: "Sharing 3u 1 Bulan", price: "Rp 44.000" }, { label: "Private - Rp 107.000", val: "Private", price: "Rp 107.000" } ]},
+            { category: "Edu", name: "Grammarly", icon: "✍️", options: [ { label: "Sharing 1 Bulan - Rp 13.000", val: "Sharing 1 Bulan", price: "Rp 13.000" }, { label: "Sharing Lifetime - Rp 26.000", val: "Sharing Lifetime", price: "Rp 26.000" }, { label: "Private 1 Bulan - Rp 36.000", val: "Private 1 Bulan", price: "Rp 36.000" } ]},
+            { category: "Edu", name: "Scribd", icon: "📖", options: [ { label: "Sharing 1 Bulan - Rp 10.000", val: "Sharing 1 Bulan", price: "Rp 10.000" }, { label: "Private 1 Bulan - Rp 16.000", val: "Private 1 Bulan", price: "Rp 16.000" } ]},
+            { category: "Edu", name: "Duolingo", icon: "🦉", options: [ { label: "Famplan 1 Bulan - Rp 10.500", val: "Famplan 1 Bulan", price: "Rp 10.500" }, { label: "Indplan 21 Hari - Rp 11.000", val: "Indplan 21 Hari", price: "Rp 11.000" } ]},
+            { category: "Edu", name: "Al Tools Lainnya", icon: "🧠", options: [ { label: "Perplexity Shar 1B - Rp 36.000", val: "Perplexity Sharing 1 Bulan", price: "Rp 36.000" }, { label: "Quillbot Priv 1B - Rp 35.000", val: "Quillbot Private 1 Bulan", price: "Rp 35.000" }, { label: "Claude Sharing 7 Hari - Rp 26.000", val: "Claude Sharing 7 Hari", price: "Rp 26.000" } ]},
+            { category: "Edu", name: "Reading (Novel)", icon: "📚", options: [ { label: "Fizzo Novel Shar 1B - Rp 10.500", val: "Fizzo Sharing 1 Bulan", price: "Rp 10.500" }, { label: "Wattpad Priv 1B - Rp 31.000", val: "Wattpad Private 1 Bulan", price: "Rp 31.000" } ]},
+
+            // AUDIO & MEETING
+            { category: "Meeting", name: "Spotify", icon: "🎵", options: [ { label: "Harian - Rp 9.000", val: "1 Hari", price: "Rp 9.000" }, { label: "Indplan Fullgar 1 Bln - Rp 26.000", val: "Indplan Fullgar 1 Bulan", price: "Rp 26.000" }, { label: "Famplan 2 Bln - Rp 39.000", val: "Famplan 2 Bulan", price: "Rp 39.000" } ]},
+            { category: "Meeting", name: "Apple Music", icon: "🎧", options: [ { label: "Indplan 1 Bulan - Rp 15.000", val: "Indplan 1 Bulan", price: "Rp 15.000" }, { label: "Famplan 1 Bulan - Rp 10.500", val: "Famplan 1 Bulan", price: "Rp 10.500" } ]},
+            { category: "Meeting", name: "Zoom Pro", icon: "📹", options: [ { label: "100p 1 Hari - Rp 9.000", val: "100 Participant 1 Hari", price: "Rp 9.000" }, { label: "100p 7 Hari - Rp 16.000", val: "100 Participant 7 Hari", price: "Rp 16.000" }, { label: "300p 1 Hari - Rp 34.000", val: "300 Participant 1 Hari", price: "Rp 34.000" } ]}
+        ];
+
+        let currentCategory = 'All';
+
+        function renderProducts(data) {
+            const grid = document.getElementById('product-grid');
+            const emptyState = document.getElementById('empty-state');
+            const bottomBanner = document.getElementById('bottom-banner');
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                emptyState.classList.remove('hidden');
+                bottomBanner.classList.add('hidden'); // Sembunyikan banner bawah kalau empty state udah muncul
+            } else {
+                emptyState.classList.add('hidden');
+                bottomBanner.classList.remove('hidden');
+                data.forEach((item, index) => {
+                    let optionsHtml = '';
+                    item.options.forEach(opt => {
+                        let valData = `${item.name}|${opt.val}|${opt.price}`;
+                        optionsHtml += `<option value="${valData}">${opt.label}</option>`;
+                    });
+
+                    grid.innerHTML += `
+                        <div class="card">
+                            <div class="card-icon">${item.icon}</div>
+                            <h3>${item.name}</h3>
+                            <select class="durasi-select" id="select-${index}">${optionsHtml}</select>
+                            <button class="btn-pesan" onclick="orderWA('select-${index}')">Pesan 🛒</button>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function setCategory(cat, btnElement) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            filterProducts();
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const filtered = products.filter(item => {
+                const matchKategori = (currentCategory === 'All') || (item.category === currentCategory);
+                const matchCari = item.name.toLowerCase().includes(query) || 
+                                  item.options.some(opt => opt.label.toLowerCase().includes(query));
+                return matchKategori && matchCari;
+            });
+            renderProducts(filtered);
+        }
+
+        // Pesan produk dari grid
+        function orderWA(selectId) {
+            const selectElement = document.getElementById(selectId);
+            const selectedData = selectElement.value.split('|'); 
+            
+            const appName = selectedData[0];
+            const duration = selectedData[1];
+            const price = selectedData[2];
+
+            const message = `Mau pesan ${appName} ${duration} Harga ${price} terus kirim ke aku ke wa 085859314712`;
+            const waLink = `https://wa.me/6285859314712?text=${encodeURIComponent(message)}`;
+            window.open(waLink, '_blank');
+        }
+
+        // Tanya admin kalau produk nggak ada
+        function chatAdminManual() {
+            const query = document.getElementById('search-bar').value;
+            let message = "Halo min! 🌸 Mau tanya dong, kalau untuk aplikasi ";
+            
+            if (query.trim() !== "") {
+                message += `*${query}* `;
+            } else {
+                message += "lainnya ";
+            }
+            message += "apakah ada? ✨";
+
+            const waLink = `https://wa.me/6285859314712?text=${encodeURIComponent(message)}`;
+            window.open(waLink, '_blank');
+        }
+
+        // Load Pertama Kali
+        renderProducts(products);
+    </script>
+</body>
+</html>
