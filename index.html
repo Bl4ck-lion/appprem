@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seraphm Apps 🎮</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Tema Terang */
+        :root {
+            --bg-grid: rgba(250, 249, 246, 0.95);
+            --primary-card: #f4c7b8;
+            --btn-color: #a3c9a8;
+            --btn-hover: #8eb393;
+            --border-dark: #2d3436;
+            --text-color: #2d3436;
+            --grid-line: #e1e1e1;
+            --banner-bg: #fff3cd;
+            --banner-text: #856404;
+            --not-found-bg: #e0f7fa;
+        }
+
+        /* Tema Gelap */
+        [data-theme="dark"] {
+            --bg-grid: rgba(30, 30, 46, 0.95);
+            --primary-card: #313244;
+            --btn-color: #f38ba8;
+            --border-dark: #cdd6f4;
+            --text-color: #cdd6f4;
+            --grid-line: #45475a;
+            --banner-bg: #45475a;
+            --banner-text: #f38ba8;
+            --not-found-bg: #1e1e2e;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Quicksand', sans-serif;
+            background-image: url('https://media.tenor.com/GfJkI2G5w8QAAAAC/pixel-art-background.gif');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .app-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: var(--bg-grid);
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border: 3px solid var(--border-dark);
+            border-radius: 16px;
+            box-shadow: 8px 8px 0px var(--border-dark);
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        header {
+            padding: 15px 25px;
+            border-bottom: 3px solid var(--border-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-family: 'Fredoka', sans-serif; font-size: 24px; font-weight: 600; }
+        
+        .theme-btn {
+            background: var(--btn-color);
+            border: 2px solid var(--border-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--border-dark);
+            box-shadow: 2px 2px 0px var(--border-dark);
+        }
+        .theme-btn:active { box-shadow: 0 0 0 var(--border-dark); transform: translate(2px, 2px); }
+
+        main { padding: 30px; }
+
+        .promo-banner {
+            background-color: var(--banner-bg);
+            color: var(--banner-text);
+            padding: 15px;
+            border: 2px dashed var(--border-dark);
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        /* Kontrol: Search & Kategori */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 15px;
+            border: 3px solid var(--border-dark);
+            border-radius: 12px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 16px;
+            background: var(--bg-grid);
+            color: var(--text-color);
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .categories {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            scrollbar-width: none;
+        }
+        .categories::-webkit-scrollbar { display: none; }
+
+        .cat-btn {
+            background: transparent;
+            border: 2px solid var(--border-dark);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'Fredoka', sans-serif;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .cat-btn.active, .cat-btn:hover {
+            background: var(--btn-color);
+            color: var(--border-dark);
+            box-shadow: 2px 2px 0px var(--border-dark);
+        }
+
+        /* Grid Item */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--primary-card);
+            border: 3px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 4px 4px 0px var(--border-dark);
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid var(--border-dark);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .card h3 { margin: 5px 0 10px; font-size: 16px; font-family: 'Fredoka', sans-serif; }
+
+        select.durasi-select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 2px solid var(--border-dark);
+            border-radius: 6px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            background: var(--bg-grid);
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .btn-pesan {
+            background-color: var(--btn-color);
+            color: var(--border-dark);
+            border: 3px solid var(--border-dark);
+            padding: 10px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Fredoka', sans-serif;
+            box-shadow: 2px 2px 0px var(--border-dark);
+            margin-top: auto;
+        }
+        .btn-pesan:active { box-shadow: 0px 0px 0px var(--border-dark); transform: translate(2px, 2px); }
+
+        /* Banner & Empty State Khusus Chat Admin */
+        .not-found-banner {
+            background-color: var(--not-found-bg);
+            border: 3px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 4px 4px 0px var(--border
