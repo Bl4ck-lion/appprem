@@ -46,8 +46,8 @@
         }
 
         .app-container {
-            max-width: 1000px;
-            margin: 0 auto;
+            max-width: 1200px; /* Lebih lebar untuk desktop */
+            margin: 40px auto; /* Margin atas-bawah supaya melayang estetik di desktop */
             background-color: var(--bg-grid);
             background-image: 
                 linear-gradient(var(--grid-line) 1px, transparent 1px),
@@ -61,50 +61,56 @@
         }
 
         header {
-            padding: 15px 25px;
+            padding: 20px 35px;
             border-bottom: 3px solid var(--border-dark);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .logo { font-family: 'Fredoka', sans-serif; font-size: 24px; font-weight: 600; }
+        .logo { font-family: 'Fredoka', sans-serif; font-size: 26px; font-weight: 600; }
         
         .theme-btn {
             background: var(--btn-color);
             border: 2px solid var(--border-dark);
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 20px;
             font-family: 'Fredoka', sans-serif;
             font-weight: 600;
             cursor: pointer;
             color: var(--border-dark);
             box-shadow: 2px 2px 0px var(--border-dark);
+            transition: all 0.2s;
         }
+        .theme-btn:hover { background: var(--btn-hover); }
         .theme-btn:active { box-shadow: 0 0 0 var(--border-dark); transform: translate(2px, 2px); }
 
-        main { padding: 30px; }
+        main { padding: 35px; }
 
         .promo-banner {
             background-color: var(--banner-bg);
             color: var(--banner-text);
-            padding: 15px;
+            padding: 15px 20px;
             border: 2px dashed var(--border-dark);
             border-radius: 12px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             font-weight: 700;
             line-height: 1.5;
+            font-size: 16px;
         }
 
-        /* Kontrol: Search & Kategori */
+        /* Kontrol: Search & Kategori (Responsif Desktop Pertama) */
         .controls {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            flex-direction: row; /* Sejajar kiri kanan di desktop */
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
             margin-bottom: 30px;
         }
 
         .search-bar {
-            width: 100%;
+            flex: 1;
+            max-width: 400px; /* Batas maksimal lebar search bar di desktop */
             padding: 12px 15px;
             border: 3px solid var(--border-dark);
             border-radius: 12px;
@@ -114,10 +120,14 @@
             color: var(--text-color);
             outline: none;
             box-sizing: border-box;
+            transition: border-color 0.3s;
         }
+        .search-bar:focus { border-color: var(--btn-color); }
 
         .categories {
+            flex: 2;
             display: flex;
+            justify-content: flex-end; /* Nempel ke kanan di desktop */
             gap: 10px;
             overflow-x: auto;
             padding-bottom: 5px;
@@ -132,6 +142,7 @@
             padding: 8px 16px;
             border-radius: 20px;
             font-family: 'Fredoka', sans-serif;
+            font-size: 15px;
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.2s;
@@ -142,90 +153,122 @@
             box-shadow: 2px 2px 0px var(--border-dark);
         }
 
-        /* Grid Item */
+        /* Grid Item (Otomatis menyesuaikan layar) */
         .grid-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
         }
 
         .card {
             background: var(--primary-card);
             border: 3px solid var(--border-dark);
             border-radius: 12px;
-            padding: 15px;
+            padding: 18px;
             box-shadow: 4px 4px 0px var(--border-dark);
             display: flex;
             flex-direction: column;
             text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 6px 6px 0px var(--border-dark);
         }
         
         .card-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
+            font-size: 45px;
+            margin-bottom: 12px;
             background: rgba(255,255,255,0.2);
             border: 2px solid var(--border-dark);
             border-radius: 8px;
             padding: 10px;
         }
 
-        .card h3 { margin: 5px 0 10px; font-size: 16px; font-family: 'Fredoka', sans-serif; }
+        .card h3 { margin: 5px 0 15px; font-size: 18px; font-family: 'Fredoka', sans-serif; }
 
         select.durasi-select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             margin-bottom: 15px;
             border: 2px solid var(--border-dark);
             border-radius: 6px;
             font-family: 'Quicksand', sans-serif;
+            font-size: 14px;
             font-weight: 600;
             background: var(--bg-grid);
             color: var(--text-color);
             cursor: pointer;
+            outline: none;
         }
 
         .btn-pesan {
             background-color: var(--btn-color);
             color: var(--border-dark);
             border: 3px solid var(--border-dark);
-            padding: 10px;
+            padding: 12px;
+            font-size: 15px;
             font-weight: 700;
             border-radius: 8px;
             cursor: pointer;
             font-family: 'Fredoka', sans-serif;
             box-shadow: 2px 2px 0px var(--border-dark);
             margin-top: auto;
+            transition: all 0.2s;
         }
+        .btn-pesan:hover { background: var(--btn-hover); }
         .btn-pesan:active { box-shadow: 0px 0px 0px var(--border-dark); transform: translate(2px, 2px); }
 
-        /* Banner & Empty State Khusus Chat Admin */
+        /* Banner & Empty State */
         .not-found-banner {
             background-color: var(--not-found-bg);
             border: 3px solid var(--border-dark);
             border-radius: 12px;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             margin-top: 40px;
             box-shadow: 4px 4px 0px var(--border-dark);
         }
-        .not-found-banner p { margin: 0 0 15px 0; font-weight: 600; font-size: 16px; }
+        .not-found-banner p { margin: 0 0 15px 0; font-weight: 600; font-size: 17px; }
         
-        .empty-state { text-align: center; width: 100%; padding: 40px 0; }
+        .empty-state { text-align: center; width: 100%; padding: 50px 0; }
         .hidden { display: none !important; }
 
-        /* Note Harga Berubah */
         .footer-note {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 40px;
             font-size: 14px;
             color: var(--text-color);
             opacity: 0.8;
             font-weight: 600;
         }
 
-        @media (max-width: 768px) {
-            .app-container { border-radius: 0; border: none; border-top: 3px solid var(--border-dark); border-bottom: 3px solid var(--border-dark);}
-            body { padding: 0; }
+        /* Responsif untuk Tablet & HP */
+        @media (max-width: 900px) {
+            .controls {
+                flex-direction: column; /* Ubah tata letak jadi ke bawah */
+                align-items: stretch;
+            }
+            .search-bar { max-width: 100%; }
+            .categories { justify-content: flex-start; }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 0; background-attachment: scroll; }
+            .app-container { 
+                margin: 0; 
+                border-radius: 0; 
+                border-left: none; 
+                border-right: none;
+                min-height: 100vh; /* Penuhi layar di HP */
+            }
+            header { padding: 15px 20px; }
+            .logo { font-size: 22px; }
+            main { padding: 20px; }
+            .grid-cards { gap: 15px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .card h3 { font-size: 15px; }
+            .card-icon { font-size: 35px; }
+            .btn-pesan { padding: 10px; font-size: 13px; }
         }
     </style>
 </head>
@@ -245,24 +288,24 @@
             <div class="controls">
                 <input type="text" id="search-bar" class="search-bar" placeholder="🔍 Cari aplikasi (ex: Netflix, Canva, Zoom...)" onkeyup="filterProducts()">
                 <div class="categories">
-                    <button class="cat-btn active" onclick="setCategory('All', this)">Semua Aplikasi</button>
+                    <button class="cat-btn active" onclick="setCategory('All', this)">Semua</button>
                     <button class="cat-btn" onclick="setCategory('Streaming', this)">📺 Streaming</button>
                     <button class="cat-btn" onclick="setCategory('Editing', this)">🎨 Editing</button>
                     <button class="cat-btn" onclick="setCategory('Edu', this)">📚 Edu & Reading</button>
-                    <button class="cat-btn" onclick="setCategory('Meeting', this)">🎧 Audio & Meeting</button>
+                    <button class="cat-btn" onclick="setCategory('Meeting', this)">🎧 Meeting</button>
                 </div>
             </div>
 
             <div class="grid-cards" id="product-grid"></div>
             
             <div id="empty-state" class="empty-state hidden">
-                <p style="font-size: 18px; font-weight: 700; margin-bottom: 15px;">Yah, aplikasinya nggak ketemu 🥲</p>
-                <button class="btn-pesan" style="padding: 12px 24px;" onclick="chatAdminManual()">Tanya Admin Langsung 💬</button>
+                <p style="font-size: 20px; font-weight: 700; margin-bottom: 15px;">Yah, aplikasinya nggak ketemu 🥲</p>
+                <button class="btn-pesan" style="padding: 12px 24px; max-width: 250px; margin: 0 auto;" onclick="chatAdminManual()">Tanya Admin Langsung 💬</button>
             </div>
 
             <div class="not-found-banner" id="bottom-banner">
                 <p>Aplikasi yang kamu butuhkan belum ada di pricelist?</p>
-                <button class="btn-pesan" onclick="chatAdminManual()">Chat Admin Saja! 💬</button>
+                <button class="btn-pesan" style="padding: 12px 30px;" onclick="chatAdminManual()">Chat Admin Saja! 💬</button>
             </div>
 
             <div class="footer-note">
@@ -272,7 +315,6 @@
     </div>
 
     <script>
-        // Toggle Theme
         const toggleBtn = document.getElementById('theme-toggle');
         toggleBtn.addEventListener('click', () => {
             if(document.body.getAttribute('data-theme') === 'dark') {
@@ -300,7 +342,7 @@
             { category: "Streaming", name: "IQIYI", icon: "💚", options: [ { label: "Sharing Standar 1B - Rp 10.000", val: "Sharing Standard 1 Bulan", price: "Rp 10.000" }, { label: "Private Premium 1B - Rp 42.000", val: "Private Premium 1 Bulan", price: "Rp 42.000" } ]},
             { category: "Streaming", name: "HBO Max", icon: "🎬", options: [ { label: "Shar Std 5u 1 Bln - Rp 21.000", val: "Sharing Std 1 Bulan", price: "Rp 21.000" }, { label: "Private Ult 1 Bln - Rp 117.000", val: "Private Ult 1 Bulan", price: "Rp 117.000" } ]},
             { category: "Streaming", name: "Loklok", icon: "📱", options: [ { label: "Shar Basic 1Bln - Rp 22.000", val: "Sharing Basic 1 Bulan", price: "Rp 22.000" }, { label: "Private Std 1Bln - Rp 87.000", val: "Private Standard 1 Bulan", price: "Rp 87.000" } ]},
-            { category: "Streaming", name: "Lainnya (Viu/Viki/Dll)", icon: "🍿", options: [ { label: "Viu Private 1 Bln - Rp 7.000", val: "Viu Private 1 Bulan", price: "Rp 7.000" }, { label: "AppleTV Private 1B - Rp 51.000", val: "Apple TV Private 1 Bulan", price: "Rp 51.000" }, { label: "Crunchyroll Priv 1B - Rp 21.000", val: "Crunchyroll Private 1 Bulan", price: "Rp 21.000" } ]},
+            { category: "Streaming", name: "Lainnya", icon: "🍿", options: [ { label: "Viu Private 1 Bln - Rp 7.000", val: "Viu Private 1 Bulan", price: "Rp 7.000" }, { label: "AppleTV Private 1B - Rp 51.000", val: "Apple TV Private 1 Bulan", price: "Rp 51.000" }, { label: "Crunchyroll Priv 1B - Rp 21.000", val: "Crunchyroll Private 1 Bulan", price: "Rp 21.000" } ]},
             
             // EDITING
             { category: "Editing", name: "Canva Pro", icon: "🖌️", options: [ { label: "Member 1 Bulan - Rp 7.000", val: "Member 1 Bulan", price: "Rp 7.000" }, { label: "Member Lifetime - Rp 13.000", val: "Lifetime (Garansi 6B)", price: "Rp 13.000" }, { label: "Admin - Rp 11.000", val: "Admin (Inv 25)", price: "Rp 11.000" } ]},
@@ -334,7 +376,7 @@
 
             if (data.length === 0) {
                 emptyState.classList.remove('hidden');
-                bottomBanner.classList.add('hidden'); // Sembunyikan banner bawah kalau empty state udah muncul
+                bottomBanner.classList.add('hidden');
             } else {
                 emptyState.classList.add('hidden');
                 bottomBanner.classList.remove('hidden');
@@ -375,7 +417,6 @@
             renderProducts(filtered);
         }
 
-        // Pesan produk dari grid
         function orderWA(selectId) {
             const selectElement = document.getElementById(selectId);
             const selectedData = selectElement.value.split('|'); 
@@ -389,7 +430,6 @@
             window.open(waLink, '_blank');
         }
 
-        // Tanya admin kalau produk nggak ada
         function chatAdminManual() {
             const query = document.getElementById('search-bar').value;
             let message = "Halo min! 🌸 Mau tanya dong, kalau untuk aplikasi ";
@@ -405,7 +445,7 @@
             window.open(waLink, '_blank');
         }
 
-        // Load Pertama Kali
+        // Render Saat Dimuat
         renderProducts(products);
     </script>
 </body>
